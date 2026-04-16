@@ -27,6 +27,10 @@ avatarServer.on('error', (err) => {
 app.use(cors());
 app.use(express.json());
 
+// Serve static React files in production
+app.use(express.static(path.join(__dirname, 'public')));
+
+
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
@@ -706,6 +710,10 @@ app.post('/api/init-products', async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
+});
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, () => {
